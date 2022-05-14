@@ -1,37 +1,6 @@
 Board Game Geek Exploration
 ================
 
-## GitHub Documents
-
-This is an R Markdown format used for publishing markdown documents to
-GitHub. When you click the **Knit** button all R code chunks are run and
-a markdown file (.md) suitable for publishing to GitHub is generated.
-
-## Including Code
-
-You can include R code in the document as follows:
-
-``` r
-summary(cars)
-```
-
-    ##      speed           dist       
-    ##  Min.   : 4.0   Min.   :  2.00  
-    ##  1st Qu.:12.0   1st Qu.: 26.00  
-    ##  Median :15.0   Median : 36.00  
-    ##  Mean   :15.4   Mean   : 42.98  
-    ##  3rd Qu.:19.0   3rd Qu.: 56.00  
-    ##  Max.   :25.0   Max.   :120.00
-
-## Including Plots
-
-You can also embed plots, for example:
-
-![](BoardGameGeekDataExploration_files/figure-gfm/pressure-1.png)<!-- -->
-
-Note that the `echo = FALSE` parameter was added to the code chunk to
-prevent printing of the R code that generated the plot.
-
 
 # Exploring BBG Ratings
 ##### Creating 3 Graphs from a Dataset made availible by [Board Game Geek](https://boardgamegeek.com/). The dataset can be found [here](https://www.kaggle.com/datasets/jvanelteren/boardgamegeek-reviews?select=games_detailed_info.csv).
@@ -73,7 +42,7 @@ colnames(details)
 I used the id column as the key in the two data sets.
 ```{r joining data}
 join_rating_details <- ratings %>% 
-  inner_join(details, by = "id")
+  outer_join(details, by = "id")
 glimpse(join_rating_details)
 ```
 
@@ -81,7 +50,7 @@ glimpse(join_rating_details)
 ### 2. Do more players increase the playtime?
 ##### I filtered the visualization for modern games (published after 1950) that can be played in a day with breaks and with 10 players or less. 
 ```{r}
-data_time_vs_players <- details %>% 
+data_time_vs_players <- join_rating_details %>% 
   filter(maxplayers <= 10, maxplayers != 0) %>% 
   filter(playingtime <= 360, playingtime != 0) %>% 
   filter(yearpublished > 1950)
